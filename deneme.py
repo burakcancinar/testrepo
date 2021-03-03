@@ -1,237 +1,248 @@
-from datetime import datetime
-from random import randint
+import random
+import time
+from math import *
 
+def menu():
+    print("""
+    
+    2. Turn Off Pc
+    3. Volume Settings
+    4. Student Register
+    5. Calculator
+    6. Number Guessing Game 
+    7. Hangman Game
+    8. RPG Game
+    Çıkmak İçin 'q' basınız.
+    """)
+def menu2():
+    print("\n**** The Computer is 'OFF' Please Turn 'ON' The Computer ****")
+def hangman():
+    print("""
+     ________
+    |/   |     
+    |   (_)             
+    |   /|\           
+    |    |        
+    |   / \        
+    |               
+    |___    
+                         _                     
+                        | |                    
+                        | | ___  ___  ___ _ __ 
+                        | |/ _ \/ __|/ _ \ '__|
+                        | | (_) \__ \  __/ |   
+                        |_|\___/|___/\___|_|   
 
-"#######################CLASS########################"
-class city:
-    def __init__(self,name):
-        self.__name = name
-        self.__temperature = randint(18,30)
-        self.__weather = ["Clean","Cloudy","Windy","Stormy"] [randint(0,3)]
-
-    def getName(self):
-        return self.__name
-
-    def getTemperature(self):
-        return self.__temperature
-
-    def getWeather(self):
-        return self.__weather
-
-    def setTemperature(self,temperature:int):
-        self.__temperature = temperature
-
-    def setWeather(self,status):
-        if status not in ["Clean","Cloudy","Windy","Stormy"]:
-            pass
+          """)
+word = ["burak","cam","sivas"]
+class computer():
+    def __init__(self,pc_status ="OFF",pc_volume = "0"):
+        self.pc_status = pc_status
+        self.pc_volume = pc_volume
+    def pc_on(self):
+        if(self.pc_status == "ON"):
+            print("Computer already ON")
         else:
-            self.__weather = status
-    def __str__(self):
-        return self.__name
-
-class fly:
-    def __init__(self,wherefrom:city,where:city,date:datetime):
-        self.__date = date
-        self.__where = where
-        self.__wherefrom = wherefrom
-
-
-    def delay(self,minutes:int):
-        day = self.__date.day
-        hour = self.__date.hour     # 7
-        minute = self.__date.minute # 40
-
-        if (minute + minutes) >= 60:
-            hour += int((minute+minutes)/60)
-            minute = (minute + minutes ) % 60
-
-            if hour >= 24:
-                day += int(hour / 24)
-                hour = hour % 24
-
-                newDate = datetime(self.__date.year,self.__date.month,day,hour,minute)
-                self.__date = newDate
-
-        newDate = datetime(self.__date.year,self.__date.month,day,hour,minute)
-        self.__date = newDate
-
-    def getDate(self):
-        return self.__date
-    def getWhere(self):
-        return self.__where
-    def getWherefrom(self):
-        return self.__wherefrom
-
-class Passenger:
-    def __init__(self,name:str,surname:str,id:int):
-        self.__name = name
-        self.__surname = surname
-        self.__id = id
-
-    def getName(self):
-        return self.__name
-    def getSurname(self):
-        return self.__surname
-    def getId(self):
-        return self.__id
-
-class ticket:
-    def __init__(self,passenger:Passenger,flight:fly,seat:str):
-        self.__passenger = passenger
-        self.__flight = flight
-        self.__seatno = seat
-    def __str__(self):
-        string = """
-        Name:           {}
-        Surname:        {}
-        Id:             {}
-        Fly Date:       {}
-        Fly Hour:       {}
-        Where:      {}
-        Where From: {}      Weather: {}
-        Seat No:        {}
-        """.format(self.__passenger.getName(), self.__passenger.getSurname(),self.__passenger.getId(),self.__flight.getDate().date(),self.__flight.getDate().time(),self.__flight.getWhere().getName(),self.__flight.getWherefrom().getName(),self.__flight.getWherefrom().getWeather(),self.__seatno)
-        return string
-
-    def getFly(self):
-        return self.__flight
-
-class Pegasus:
+            print("Computer starting...")
+            time.sleep(1)
+            self.pc_status = "ON"
+    def pc_off(self):
+        if(self.pc_status == "OFF"):
+            print("Computer already OFF")
+        else:
+            print("Computer Shut Downing...")
+            time.sleep(2)
+            self.pc_status = "OFF"
+    def sound_settings(self):
+        if (self.pc_status == "OFF"):
+            print("***PC Off You Have To Turn On***")
+        else:
+            self.pc_volume = 0
+            while True:
+                user_input = input("---------------\nDecrease Volume: '<'\nIncrease Volume: '>'\nMute Volume: '!'\nExit: exit\n---------------\n:")
+                if(user_input == "<"):
+                    if(self.pc_volume != 0):
+                        self.pc_volume -= 10
+                        print("Volume: ",self.pc_volume)
+                elif(user_input == ">"):
+                    if(self.pc_volume != 31):
+                        self.pc_volume += 10
+                        print("Volume: ",self.pc_volume)
+                elif(user_input == "!"):
+                    self.pc_volume = 0
+                    print("Volume: ",self.pc_volume)
+                else:
+                    print("Volume Updated: ",self.pc_volume)
+                    break
+comp = computer()
+class worker:
+    def __init__(self, name, surname,student_id,sequence_number,phone_number,e_mail):
+        self.name = name
+        self.surname = surname
+        self.student_id = student_id
+        self.phone_number = phone_number
+        self.e_mail = e_mail
+        self.sequence_number =sequence_number
+    @classmethod
+    def from_input(cls):
+        return cls(
+            sequence_number = int(input("Sequence Number: ")),
+            name = input('Name: '),
+            surname = input("Surname: "),
+            student_id = int(input(('Student ID: '))),
+            phone_number = int(input("Phone Number: ")),
+            e_mail = input("E-Mail: ")
+        )
+    def __str__(self):  #printing function
+        return "-------------\nName: {}\nSurname: {}\nStudent ID: {}\nPhone Number: {}\nE-Mail: {}\n-------------".format(self.name, self.surname, self.student_id,self.phone_number,self.e_mail)
+class number_game():
     def __init__(self):
-        self.__activeticket = list()
-        self.__passiveticket = list()
-        self.__activeflights = list()
-        self.__passiveflights = list()
-
-    def buyTicket(self, passanger:Passenger, flight:fly, seat:str):
-        if flight in self.__activeflights:
-            Ticket = ticket(passanger,flight,seat)
-            self.__activeticket.append(Ticket)
-            return Ticket
-
-    def makeFlight(self, where:city, wherefrom:city, date:datetime):
-        flight = fly(wherefrom,where,date)
-        self.__activeflights.append(flight)
-        return flight
-
-    def ticketCancel(self,Ticket: ticket):
-        if Ticket in self.__activeticket:
-            self.__activeticket.remove(Ticket)
-            print("Ticket has cancelled!")
+        self.user_play = 0
+        self.secret_num = random.randint(0, 10)
+        self.user_input = 0
+        self.user_mistake = 0
+        self.game_mechanics()  # This is new
+    def game_mechanics(self):
+        while True:
+            self.user_input = int(input("Pick a Number Between 1-10\n>>>"))
+            if (self.user_input > 10):
+                print("I Picked a Number Between 1 to 10, You Entered {} Are You Idiot? ".format(self.user_input))
+            elif (self.user_input < 0):
+                print("I Picked a Number Between 1 to 10, You Entered {} Are You Idiot? ".format(self.user_input))
+            elif (self.user_input > self.secret_num):
+                print("Your Value Too High, Keep Try!")
+                self.user_mistake += 1
+            elif(self.user_input < self.secret_num):
+                print("Your Value Too Low, Keep Try!")
+                self.user_mistake += 1
+            elif(self.user_input == self.secret_num):
+                print(("You Won Finally... The Number Was {} After {} mistakes. If You Want Play Again Press 1".format(self.secret_num,self.user_mistake)))
+                user_play = int(input(">>>"))
+                if(user_play == "1"):
+                    self.secret_num = random.randint(0,10)
+                    new_game()
+                else:
+                    menu()
+                    break
+def new_game():
+    number_game()
+class hangman_game():
+    def __init__(self):
+        self.user_word = ""
+        self.secret_word = random.choice(word)
+        self.turns = len(self.secret_word)
+        self.guesses = ""
+        self.game_mech()
+    def game_mech(self):
+        while self.turns > 0:
+            self.user_mistake = 0
+            for char in self.secret_word:
+                if char in self.guesses:
+                    print(char, end='')
+                else:
+                    print(' _ ', end='')
+                    self.user_mistake = self.user_mistake + 1
+            if self.user_mistake == 0:
+                print("\nYou Won.")
+                user_restart = input("Play Again? YES Or NO: ")
+                if user_restart == "YES":
+                    new_gameh()
+                else:
+                    menu()
+                break
+            self.user_word = input("\nGuess a char: ")
+            self.guesses =  self.guesses+self.user_word
+            if self.user_word not in self.secret_word:
+                self.turns = self.turns - 1
+                print("Wrong")
+            print("You have", + self.turns, "more guesses")
+            if self.turns == 0:
+                print("Secret word was {}".format(self.secret_word))
+                hangman()
+                user_restart = input("Play Again? YES Or NO: ")
+                if user_restart == "YES":
+                    new_gameh()
+                else:
+                    menu()
+                    break
+def new_gameh():
+    hangman_game()
+def login():
+    attemp = 3
+    while attemp > 0:
+        print("Username: Admin Password: ")
+        login = input(">>>")
+        print("Checking...")
+        time.sleep(1)
+        if login == "123":
+            print("Access Granted...")
+            menu()
+            break
         else:
-            print("None Ticket!")
-
-    def flyTook(self,flight:fly):
-        for ticket in self.__activeticket:
-            if ticket.getFly() == flight:
-                self.__activeticket.remove(ticket)
-                self.__passiveticket.append(ticket)
-        self.__activeflights.remove(flight)
-        self.__passiveflights.append(flight)
-
-    def delay(self,flight:fly, minute:int):
-        flight.delay(minute)
-
-
-"#####################################################"
-
-def Main():
-    s = """Adana
-    Adıyaman
-    Afyonkarahisar
-    Ağrı
-    Aksaray
-    Amasya
-    Ankara
-    Antalya
-    Ardahan
-    Artvin
-    Aydın
-    Balıkesir
-    Bartın
-    Batman
-    Bayburt
-    Bilecik
-    Bingöl
-    Bitlis
-    Bolu
-    Burdur
-    Bursa
-    Çanakkale
-    Çankırı
-    Çorum
-    Denizli
-    Diyarbakır
-    Düzce
-    Edirne
-    Elazığ
-    Erzincan
-    Erzurum
-    Eskişehir
-    Gaziantep
-    Giresun
-    Gümüşhane
-    Hakkari
-    Hatay
-    Iğdır
-    Isparta
-    İstanbul
-    İzmir
-    Kahramanmaraş
-    Karabük
-    Karaman
-    Kars
-    Kastamonu
-    Kayseri
-    Kırıkkale
-    Kırklareli
-    Kırşehir
-    Kilis
-    Kocaeli
-    Konya
-    Kütahya
-    Malatya
-    Manisa
-    Mardin
-    Mersin
-    Muğla
-    Muş
-    Nevşehir
-    Niğde
-    Ordu
-    Osmaniye
-    Rize
-    Sakarya
-    Samsun
-    Siirt
-    Sinop
-    Sivas
-    Şırnak
-    Tekirdağ
-    Tokat
-    Trabzon
-    Tunceli
-    Şanlıurfa
-    Uşak
-    Van
-    Yalova
-    Yozgat
-    Zonguldak"""
-    cities = list()
-    for i in s.split("\n"):
-        cities.append(city(i))
-
-    pegasus = Pegasus()
-    can = Passenger("Can", "Çınar", 123456789)
-    flight1 = pegasus.makeFlight(cities[5], cities[67], datetime(2018,5,6,12,30))
-    canticket = pegasus.buyTicket(can,flight1, "C2")
-    print(canticket)
-    pegasus.delay(flight1,40)
-    print(canticket)
-    flight2 = pegasus.makeFlight(cities[4],cities[5],datetime(2018,5,7,5,45))
-    x = ticket(can,flight2,"C1")
-    pegasus.ticketCancel(x)
-
-
-if __name__ == "__main__":
-    Main()
+            print("Error, Password not match..")
+            attemp = attemp - 1
+users = {}
+menu2()
+while True:
+    process = input(">>>> ")
+    if (process == "q"):
+        print("Shutdowning...")
+        break
+    elif (process == "ON"):
+        comp.pc_on()
+        login()
+    elif (process == "2"):
+        comp.pc_off()
+        break
+    elif (process == "3"):
+        comp.sound_settings()
+        menu()
+    elif (process == "4"):
+        if (comp.pc_status == "OFF"):
+            print("Please Turn ON Computer.")
+            menu()
+        else:
+            n = int(input("How many student?: "))
+            for _ in range(n):  # create n users
+                print("{}. student".format(_ + 1))
+                user = worker.from_input()  # from user input
+                users[user.sequence_number] = user  # in the dictionary
+            for i in users:
+                print(users[i])
+    elif (process == "5"):
+        if (comp.pc_status == "OFF"):
+            print("Please Turn ON Computer.")
+            menu()
+        else:
+            print("------------\nCalculator")
+            num1 = float(input("Number: "))
+            while True:
+                operator = input("Operator(+,-,/,*):  ")
+                if operator == "+":
+                    num2 = float(input("Number: "))
+                    num1 = num1 + num2
+                elif operator == "-":
+                    num2 = float(input("Number: "))
+                    num1 = num1 - num2
+                elif operator == "*":
+                    num2 = float(input("Number: "))
+                    num1 = num1 * num2
+                elif operator == "/":
+                    num2 = float(input("Number: "))
+                    num1 = num1 / num2
+                elif operator == "=":
+                    print("\n\n\tResult: {}\n------------------".format(round(num1, 5)))
+                    menu()
+                    break
+    elif(process == "6"):
+        if (comp.pc_status == "OFF"):
+            print("Please Turn ON Computer.")
+            menu()
+        else:
+            number_game()
+    elif(process == "7"):
+        if(comp.pc_status == "OFF"):
+            print("Please Turn ON Computer.")
+            menu()
+        else:
+            hangman_game()
